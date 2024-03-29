@@ -1,0 +1,3 @@
+C:/Users/amafi/CLionProjects/ProjectC/cmake-build-debug/CMakeFiles/ProjectC.dir
+C:/Users/amafi/CLionProjects/ProjectC/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/amafi/CLionProjects/ProjectC/cmake-build-debug/CMakeFiles/rebuild_cache.dir
