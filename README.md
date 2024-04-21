@@ -7,7 +7,7 @@ So we can have columns with different types of data
 
 Currently :
 
- A Program to : 
+A Program to : 
 implement
 display
 add a value
