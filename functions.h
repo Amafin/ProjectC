@@ -1,11 +1,12 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
+///////////////////////////////// Creation of the structure /////////////////////////////////
+
+// Column that can store different types of data
 
 
-enum enum_type
-{
-    // If 1, will have type NULLVAL. If 3, will have type int
-    NULLVAL = 1 , UINT, INT, CHAR, FLOAT, DOUBLE, STRING, STRUCTURE
+enum enum_type{
+    NULLVAL = 1 , UINT = 2, INT = 3, CHAR = 4, FLOAT = 5, DOUBLE = 6, STRING = 7, STRUCTURE = 8
 };
 typedef enum enum_type ENUM_TYPE; // Rename enum enum_type as ENUM_TYPE for future uses
 
@@ -33,7 +34,7 @@ struct column {
 typedef struct column COLUMN; // Rename struct column as COLUMN for future uses
 
 
-
+///////////////////////////////// Header of the functions /////////////////////////////////
 
 /**
 * Create a new column
@@ -53,6 +54,27 @@ COLUMN *create_column(ENUM_TYPE type, char *title);
 int insert_value(COLUMN *col, void *value);
 
 
+/**
+* @brief: Free the space allocated by a column
+* @param1: Pointer to the column
+*/
+void delete_column(COLUMN **col);
 
+
+/**
+* @brief: Convert a value into a string
+* @param1: Pointer to the column
+* @param2: Position of the value in the data array
+* @param3: The string in which the value will be written
+* @param4: Maximum size of the string
+*/
+void convert_value(COLUMN *col, unsigned long long int i, char *str, int size);
+
+
+/**
+* @brief: Display the content of a column
+* @param: Pointer to the column to display
+*/
+void print_col(COLUMN* col);
 
 #endif
