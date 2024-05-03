@@ -55,8 +55,14 @@ build CMakeFiles/ProjectC.dir/main.c.obj: C_COMPILER__ProjectC_unscanned_Debug C
   OBJECT_DIR = CMakeFiles\ProjectC.dir
   OBJECT_FILE_DIR = CMakeFiles\ProjectC.dir
 
-build CMakeFiles/ProjectC.dir/functions.c.obj: C_COMPILER__ProjectC_unscanned_Debug C$:/Users/amafi/CLionProjects/ProjectC/functions.c || cmake_object_order_depends_target_ProjectC
-  DEP_FILE = CMakeFiles\ProjectC.dir\functions.c.obj.d
+build CMakeFiles/ProjectC.dir/column.c.obj: C_COMPILER__ProjectC_unscanned_Debug C$:/Users/amafi/CLionProjects/ProjectC/column.c || cmake_object_order_depends_target_ProjectC
+  DEP_FILE = CMakeFiles\ProjectC.dir\column.c.obj.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\ProjectC.dir
+  OBJECT_FILE_DIR = CMakeFiles\ProjectC.dir
+
+build CMakeFiles/ProjectC.dir/cdataframe.c.obj: C_COMPILER__ProjectC_unscanned_Debug C$:/Users/amafi/CLionProjects/ProjectC/cdataframe.c || cmake_object_order_depends_target_ProjectC
+  DEP_FILE = CMakeFiles\ProjectC.dir\cdataframe.c.obj.d
   FLAGS = -g -std=gnu11 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\ProjectC.dir
   OBJECT_FILE_DIR = CMakeFiles\ProjectC.dir
@@ -69,7 +75,7 @@ build CMakeFiles/ProjectC.dir/functions.c.obj: C_COMPILER__ProjectC_unscanned_De
 #############################################
 # Link the executable ProjectC.exe
 
-build ProjectC.exe: C_EXECUTABLE_LINKER__ProjectC_Debug CMakeFiles/ProjectC.dir/main.c.obj CMakeFiles/ProjectC.dir/functions.c.obj
+build ProjectC.exe: C_EXECUTABLE_LINKER__ProjectC_Debug CMakeFiles/ProjectC.dir/main.c.obj CMakeFiles/ProjectC.dir/column.c.obj CMakeFiles/ProjectC.dir/cdataframe.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\ProjectC.dir

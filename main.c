@@ -1,12 +1,13 @@
 #include <stdio.h>
-#include "functions.h"
+#include "column.h"
+#include "cdataframe.h"
 
 int main() {
 
-///////////////////////////////// Call of functions /////////////////////////////////
+///////////////////////////////// Variables /////////////////////////////////
+
     ENUM_TYPE type;
     int tmp;
-    int i = 0;
 
     char title[50];
     void* value;
@@ -14,7 +15,8 @@ int main() {
     COLUMN* column1;
 
 
-///////////////////////////////// Call of functions /////////////////////////////////
+///////////////////////////////// MAIN /////////////////////////////////
+
     // Select the type of the data in the new column
     printf("You have: NULLVAL = 1, UINT = 2, INT = 3, CHAR = 4, FLOAT = 5, DOUBLE = 6, STRING = 7, STRUCTURE = 8\n");
     printf("Enter the type of value for the column:\n");
@@ -53,51 +55,60 @@ int main() {
     // Create the new column
     column1 = create_column(type, title);
 
-
     // Add your values to your new column
-    switch(tmp){
-        case 2:
+    switch(column1->column_type){
+        case NULLVAL:
+            for(int i=0; column1->log_size<column1->phys_size; i++){
+                value = NULL;
+                insert_value(column1, (void*)&value);
+            }
+            break;
+        case UINT:
             // TO CHANGE //
             // Use the function insert_value to add the value
             for(int i=0; column1->log_size<column1->phys_size; i++){
                 printf("Enter a value:\n");
-                scanf("%ud", (unsigned int *)value);
+                scanf("%u", (unsigned int *)&value);
                 insert_value(column1, value);
             }
-            // type = UINT;
             break;
-        case 3:
+        case INT:
+            printf("Hello");
+            printf("%u\n", column1->log_size);
+            printf("%u\n",column1->phys_size);
             for(int i=0; column1->log_size<column1->phys_size; i++){
                 printf("Enter a value:\n");
-                scanf("%d", (int *)value);
-                insert_value(column1, value);
+                scanf("%d", (int *)&value);
+                printf("eheheh\n");
+                insert_value(column1, (void *)value);
+                printf("poupouloupoupou\n");
             }
             break;
         case 4:
             for(int i=0; column1->log_size<column1->phys_size; i++){
                 printf("Enter a value:\n");
-                scanf("%c", (char *)value);
+                scanf("%c", (char *)&value);
                 insert_value(column1, value);
             }
             break;
         case 5:
             for(int i=0; column1->log_size<column1->phys_size; i++){
                 printf("Enter a value:\n");
-                scanf("%f", (float *)value);
+                scanf("%f", (float *)&value);
                 insert_value(column1, value);
             }
             break;
         case 6:
             for(int i=0; column1->log_size<column1->phys_size; i++){
                 printf("Enter a value:\n");
-                scanf("%lf", (double *) value);
+                scanf("%lf", (double *)&value);
                 insert_value(column1, value);
             }
             break;
         case 7:
             for(int i=0; column1->log_size<column1->phys_size; i++){
                 printf("Enter a value:\n");
-                scanf("%s", (char *)value);
+                scanf("%c", (char *)&value);
                 insert_value(column1, value);
             }
             break;
@@ -106,26 +117,11 @@ int main() {
 
             // type = STRUCTURE;
             break;
-        default:
-            for(int i=0; column1->log_size<column1->phys_size; i++){
-                insert_value(column1, "");
-            }
-            break;
     }
+    printf("Bonjour");
 
 
-    // Delete a column
-    delete_column(&column1);
 
-
-    // Convert the values in order to print them
-    while(i<column1->log_size) {
-        convert_value(column1, *column1->index, string, sizeof(string));
-        column1->index ++;
-    }
-
-
-    // Print values
 
 
     return 0;

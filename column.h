@@ -69,7 +69,7 @@ void delete_column(COLUMN **col);
 * @param3: The string in which the value will be written
 * @param4: Maximum size of the string
 */
-void convert_value(COLUMN *col, unsigned long long int i, char *str, int size);
+void convert_value(COLUMN *col, unsigned long long int i, char* str[], int size);
 
 
 /**
@@ -81,11 +81,11 @@ void print_col(COLUMN* col);
 
 ///////////////////////////////// Additional functions /////////////////////////////////
 
-int valueocc(void* value);  // Return the number of occurrences of a value x (x given as a parameter)
+int valueocc(void* value, COLUMN* col);
 
-void* valueposition(unsigned long long int i);  // Return the value present at position x (x given as a parameter)
+void* valueposition(unsigned long long int i);
 
-int valuegreater(void* value);  // Return the number of values that are greater than x (x given as a parameter)
+int valuegreater(void* value);
 
 int valueless(void* value);  // Return the number of values that are less than x (x given as a parameter)
 

@@ -1,22 +1,23 @@
 #ifndef CDATAFRAME_H
 #define CDATAFRAME_H
+#include "column.h"
 
 ///////////////////////////////// Creation of the structure of the data frame /////////////////////////////////
 
 // Filling
-int createdataframe();    // Creation of an empty CDataframe
+COLUMN** createdataframe();
 
-void fillingdataframe(int* col);  // Filling in the CDataframe with user input
+void fillingdataframe(COLUMN** dataframe,COLUMN* col,int place);
 
 void hardfillingdataframe();    // Hard filling of the CDataframe
 
 
 // Displaying
-void displaydataframe(int dataframe);    // Display the entire CDataframe
+void displaydataframe(COLUMN ** dataframe);    // Display the entire CDataframe
 
 void displayrow(int dataframe, int rowlimit);    // Display a part of the CDataframe rows according to a user-provided limit
 
-void displaycol(int dataframe, int collimit);    // Display a part of the columns of the CDataframe according to a limit supplied by the user
+void displaycol(COLUMN** dataframe, int start, int end);    // Display a part of the columns of the CDataframe according to a limit supplied by the user
 
 
 // Usual operations
@@ -24,7 +25,7 @@ void addrow(int dataframe);    // Add a row of values to the CDataframe
 
 void deleterow(int dataframe);    // Delete a row of values from the CDataframe
 
-void addcol(int dataframe);    // Add a column to the CDataframe
+void addcol(COLUMN** dataframe,ENUM_TYPE type, char *title);    // Add a column to the CDataframe
 
 void delcol(int dataframe, int ColToDel);   // Delete a column from the CDataframe
 
