@@ -37,11 +37,12 @@ typedef struct column COLUMN; // Rename struct column as COLUMN for future uses
 
 ///////////////////////////////// Header of the functions /////////////////////////////////
 
+
 /**
-* Create a new column
-* @param1 : Column type
-* @param2 : Column title
-* @return : Pointer to the created column
+* @brief: Create a new column
+* @param1: Column type
+* @param2: Column title
+* @return: Pointer to the created column
 */
 COLUMN *create_column(ENUM_TYPE type, char *title);
 
@@ -81,12 +82,37 @@ void print_col(COLUMN* col);
 
 ///////////////////////////////// Additional functions /////////////////////////////////
 
-int valueocc(void* value, COLUMN* col);
 
-void* valueposition(unsigned long long int i);
+/**
+ * @brief: Number of occurrences of a value in the column
+ * @param1: Value we search fo
+ * @param2: Pointer to the column in which we search
+ * @return: Number of occurrences
+ */
+int value_occ(void* value, COLUMN* col);
 
-int valuegreater(void* value);
+/**
+ * @brief: Give the value at a position given
+ * @param1: Column in which we search
+ * @param2: Index for which we search the value
+ * @return: Value at the index
+ */
+void* value_position(COLUMN* col, unsigned long long int i);
 
-int valueless(void* value);  // Return the number of values that are less than x (x given as a parameter)
+/**
+ * @brief: Give the number of value greater than the value given
+ * @param1: Column in which we search
+ * @param2: Value given
+ * @return: Number of value greater
+ */
+int value_greater(COLUMN* col, void* value);
+
+/**
+ * @brief: Give the number of value less than the value given
+ * @param1: Column in which we search
+ * @param2: Value given
+ * @return: Number of value less
+ */
+int value_less(COLUMN* col, void* value);
 
 #endif

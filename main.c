@@ -8,10 +8,11 @@ int main() {
 
     ENUM_TYPE type;
     int tmp;
+    int entervalue = 1;
 
     char title[50];
     void* value;
-    char string[50];
+    char str[50];
     COLUMN* column1;
 
 
@@ -50,8 +51,7 @@ int main() {
 
     // Enter the title of the new column
     printf("Enter the title of your new column:\n");
-    scanf("%s", title);
-
+    scanf("%s",title);
     // Create the new column
     column1 = create_column(type, title);
 
@@ -73,55 +73,52 @@ int main() {
             }
             break;
         case INT:
-            printf("Hello");
-            printf("%u\n", column1->log_size);
-            printf("%u\n",column1->phys_size);
-            for(int i=0; column1->log_size<column1->phys_size; i++){
+            while(entervalue == 1){
                 printf("Enter a value:\n");
-                scanf("%d", (int *)&value);
-                printf("eheheh\n");
-                insert_value(column1, (void *)value);
-                printf("poupouloupoupou\n");
+                scanf("%d", (int *) &value);
+                insert_value(column1, (void *) value);
+                printf("Do you want to enter another value (1=Yes, 0=No)\n");
+                scanf("%d", &entervalue);
             }
             break;
-        case 4:
+        case CHAR:
             for(int i=0; column1->log_size<column1->phys_size; i++){
                 printf("Enter a value:\n");
                 scanf("%c", (char *)&value);
                 insert_value(column1, value);
             }
             break;
-        case 5:
+        case FLOAT:
             for(int i=0; column1->log_size<column1->phys_size; i++){
                 printf("Enter a value:\n");
                 scanf("%f", (float *)&value);
                 insert_value(column1, value);
             }
             break;
-        case 6:
+        case DOUBLE:
             for(int i=0; column1->log_size<column1->phys_size; i++){
                 printf("Enter a value:\n");
                 scanf("%lf", (double *)&value);
                 insert_value(column1, value);
             }
             break;
-        case 7:
+        case STRING:
             for(int i=0; column1->log_size<column1->phys_size; i++){
                 printf("Enter a value:\n");
                 scanf("%c", (char *)&value);
                 insert_value(column1, value);
             }
             break;
-        case 8:
+        case STRUCTURE:
             // TO CHANGE //
 
             // type = STRUCTURE;
             break;
     }
-    printf("Bonjour");
 
+////////////////// TO CHANGE ///////////////////////////
 
-
+    print_col(column1);
 
 
     return 0;
