@@ -121,13 +121,16 @@ void delete_column(COLUMN **col){
 // Convert the values in a column to string
 void convert_value(COLUMN *col, unsigned long long int i, char* str[], int size)
 {
+    char buffer[50];
     switch((*col).column_type){
         case 2:
             snprintf(*str, size, "%u", *((unsigned int*)col->data[i]));
             break;
         case 3:
-            snprintf(*str, size, "%d", *((int*)col->data[i]));
-            realloc(col->data[i], sizeof(char)*sizeof(*str));
+            snprintf(buffer, size, "%d", *((int*)col->data[i]));
+            *str = malloc(strlen(buffer) + 1);
+            strcpy(*str, buffer);
+            free(col->data[i]);
             col->data[i] = *str;
             break;
         case 4:
@@ -156,27 +159,22 @@ void convert_value(COLUMN *col, unsigned long long int i, char* str[], int size)
 // Print the values in a column
 void print_col(COLUMN* col){
     int i=0;
-    char* string[50];
 
     // Conversion of the values
-    while(i<col->log_size) {
-        printf("%d, %d, %llu     ", col->log_size, i, col->index[i]);
-        // Call of the function convert_value
-        convert_value(col, col->index[i],&(string[50]), sizeof(string));
-        printf("%s\n", col->data[i]);
-        if(i>0){
-            printf("previous = %s\n", col->data[col->index[i]-1]);
+    if(col->data != NULL) {
+        while (i < col->log_size) {
+            char *string[20];
+            // Call of the function convert_value
+            convert_value(col, col->index[i], &(string[50]), sizeof(string));
+            i++;
+            col->index[i] = i;
         }
-        i++;
-        col->index[i]=i;
     }
     i=0;
     while(i<col->log_size) {
-        printf("%d, %d, %llu;;", col->log_size, i, col->index[i]);
-        printf("[%d] %s\n", i, col->data[col->index[i]]);
+        printf("Value at position %llu: %s\n", *col->index, col->data[col->index[i]]);
         i++;
     }
-    printf("Peperonni");
 }
 
 
