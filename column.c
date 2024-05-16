@@ -51,6 +51,7 @@ int insert_value(COLUMN* col,  void* value) {
                         *((unsigned int *) col->data[col->phys_size]) = *((unsigned int *) value);
                         break;
                     case INT:
+ //////////////////////////////////////////////////////// Copy this part in the other
                         printf("Int\n");
                         col->data[col->log_size] = (COL_TYPE *) malloc(sizeof(int));
                         int* valaf = ((int *)value);
@@ -123,35 +124,53 @@ void convert_value(COLUMN *col, unsigned long long int i, char* str[], int size)
 {
     char buffer[50];
     switch((*col).column_type){
-        case 2:
-            snprintf(*str, size, "%u", *((unsigned int*)col->data[i]));
+        case NULLVAL:
             break;
-        case 3:
+        case UINT:
+            snprintf(buffer, size, "%d", *((unsigned int*)col->data[i]));
+            *str = malloc(strlen(buffer) + 1);
+            strcpy(*str, buffer);
+            free(col->data[i]);
+            col->data[i] = *str;
+            break;
+        case INT:
             snprintf(buffer, size, "%d", *((int*)col->data[i]));
             *str = malloc(strlen(buffer) + 1);
             strcpy(*str, buffer);
             free(col->data[i]);
             col->data[i] = *str;
             break;
-        case 4:
-            snprintf(*str, size, "%c", *((char*)col->data[i]));
+        case CHAR:
+            snprintf(buffer, size, "%d", *((char*)col->data[i]));
+            *str = malloc(strlen(buffer) + 1);
+            strcpy(*str, buffer);
+            free(col->data[i]);
+            col->data[i] = *str;
             break;
-        case 5:
-            snprintf(*str, size, "%f", *((float*)col->data[i]));
+        case FLOAT:
+            snprintf(buffer, size, "%d", *((float*)col->data[i]));
+            *str = malloc(strlen(buffer) + 1);
+            strcpy(*str, buffer);
+            free(col->data[i]);
+            col->data[i] = *str;
             break;
-        case 6:
-            snprintf(*str, size, "%lf", *((double*)col->data[i]));
+        case DOUBLE:
+            snprintf(buffer, size, "%d", *((double*)col->data[i]));
+            *str = malloc(strlen(buffer) + 1);
+            strcpy(*str, buffer);
+            free(col->data[i]);
+            col->data[i] = *str;
             break;
-        case 7:
-            snprintf(*str, size, "%s", (char*)col->data[i]);
+        case STRING:
+            snprintf(buffer, size, "%d", *((char*)col->data[i]));
+            *str = malloc(strlen(buffer) + 1);
+            strcpy(*str, buffer);
+            free(col->data[i]);
+            col->data[i] = *str;
             break;
-        case 8:
+        case STRUCTURE:
             // TO CHANGE //
-            snprintf(*str, size, "%d", *((int*)col->data[i]));
             break;
-        default:
-            // TO CHANGE //
-            snprintf(*str, size, "%d", *((int*)col->data[i]));
     }
 }
 
@@ -165,14 +184,14 @@ void print_col(COLUMN* col){
         while (i < col->log_size) {
             char *string[20];
             // Call of the function convert_value
-            convert_value(col, col->index[i], &(string[50]), sizeof(string));
+            convert_value(col, col->index[i], &(string[20]), sizeof(string));
             i++;
             col->index[i] = i;
         }
     }
     i=0;
     while(i<col->log_size) {
-        printf("Value at position %llu: %s\n", *col->index, col->data[col->index[i]]);
+        printf("Value at position %llu: %s\n", col->index[i], col->data[col->index[i]]);
         i++;
     }
 }
@@ -184,6 +203,7 @@ void print_col(COLUMN* col){
 // Return the number of occurrences of a value x (x given as a parameter)
 int value_occ(void* value, COLUMN* col){
     int i, occurences = 0;
+
     for(i= 0; i<col->log_size; i++){
         if(col->data[i] == value){
             occurences += 1;
@@ -194,26 +214,58 @@ int value_occ(void* value, COLUMN* col){
 
 // Return the value present at position x (x given as a parameter)
 void* value_position(COLUMN* col, unsigned long long int i){
+    char* string[20];
+    convert_value(col, i, &(string[20]), sizeof(string));
     return col->data[i];
 }
+
 
 // Return the number of values that are greater than x (x given as a parameter)
 int value_greater(COLUMN* col, void* value){
     int counter = 0;
     for(int i = 0; i<col->log_size; i++){
-        if(col->data[i] > value){
-            counter ++;
+        switch((*col).column_type) {
+            case UINT:
+                if (*(unsigned int *) value < *(unsigned int *) col->data[i]) {
+                    counter++;
+                }
+                break;
+            case INT:
+                if (*(int *) value < *(int *) col->data[i]) {
+                    counter++;
+                }
+                break;
+            case DOUBLE:
+                if (*(double *) value < *(double *) col->data[i]) {
+                    counter++;
+                }
+                break;
         }
     }
     return counter;
 }
 
+
 // Return the number of values that are less than x (x given as a parameter)
-int value_less(COLUMN* col, void* value){
+int value_less(COLUMN* col, void* value) {
     int counter = 0;
-    for(int i = 0; i<col->log_size; i++){
-        if(col->data[i] < value){
-            counter ++;
+    for (int i = 0; i < col->log_size; i++) {
+        switch ((*col).column_type) {
+            case UINT:
+                if (*(unsigned int *) value > *(unsigned int *) col->data[i]) {
+                    counter++;
+                }
+                break;
+            case INT:
+                if (*(int *)value > *(int *) col->data[i]) {
+                    counter++;
+                }
+                break;
+            case DOUBLE:
+                if (*(double *) value > *(double *) col->data[i]) {
+                    counter++;
+                }
+                break;
         }
     }
     return counter;
