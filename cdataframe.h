@@ -1,8 +1,15 @@
 #ifndef CDATAFRAME_H
 #define CDATAFRAME_H
 #include "column.h"
+#define CAPACITY 5
 
 ///////////////////////////////// Filling of the data frame /////////////////////////////////
+
+/**
+ * Bastien COULON, Amandine FINAS
+ * Cdataframe.h is where we define all the functions to create and manage the Cdataframe
+ */
+
 
 
 /**
@@ -17,12 +24,12 @@ COLUMN** createdataframe();
  * @param2: Pointer to the column to add
  * @param3: Place to add the column
  */
-void fillingdataframe(COLUMN** dataframe, COLUMN* col);
+void fillingdataframe(COLUMN** dataframe, COLUMN* col, int* log_size_array);
 
 /**
  * @brief: Fill of the dataframe directly in the code
  */
-void hardfillingdataframe();    // Hard filling of the CDataframe
+void hardfillingdataframe(COLUMN** dataframe, int* log_size_array);    // Hard filling of the CDataframe
 
 
 ///////////////////////////////// Displaying of the data frame /////////////////////////////////
@@ -31,7 +38,7 @@ void hardfillingdataframe();    // Hard filling of the CDataframe
  * @brief: Display the entire dataframe
  * @param: dataframe we want to display
  */
-void displaydataframe(COLUMN ** dataframe);    // Display the entire CDataframe
+void displaydataframe(COLUMN** dataframe, int* log_size_array);    // Display the entire CDataframe
 
 /**
  * @brief: Display a part of the row of the dataframe
@@ -39,7 +46,7 @@ void displaydataframe(COLUMN ** dataframe);    // Display the entire CDataframe
  * @param2: First row we display
  * @param3: Last row we display
  */
-void displayrow(COLUMN** dataframe, int start, int end);    // Display a part of the CDataframe rows according to a user-provided limit
+void displayrow(COLUMN** dataframe, int start, int end, int* log_size_array);    // Display a part of the CDataframe rows according to a user-provided limit
 
 /**
  * @brief: Display part of the columns of a dataframe
@@ -47,7 +54,7 @@ void displayrow(COLUMN** dataframe, int start, int end);    // Display a part of
  * @param1: First column we display
  * @param2: Last column we display
  */
-void displaycol(COLUMN** dataframe, int start, int end);    // Display a part of the columns of the CDataframe according to a limit supplied by the user
+void displaycol(COLUMN** dataframe, int start, int end, int* log_size_array);    // Display a part of the columns of the CDataframe according to a limit supplied by the user
 
 
 ///////////////////////////////// Usual operations on the data frame /////////////////////////////////
@@ -64,13 +71,13 @@ void addrow(COLUMN** dataframe);    // Add a row of values to the CDataframe
  * @param1: Dataframe in which we delete the row
  * @param2: Index of the row we want to delete
  */
-void deleterow(COLUMN** dataframe, int RowToDel);    // Delete a row of values from the CDataframe
+void delrow(COLUMN** dataframe, int RowToDel);    // Delete a row of values from the CDataframe
 
 /**
  * @brief: Add a column in a dataframe
  * @param1: dataframe in which we want to add a column
  */
-void addcol(COLUMN** dataframe);    // Add a column to the CDataframe
+void addcol(COLUMN** dataframe, int* log_size_array);    // Add a column to the CDataframe
 
 /**
  * @brief: Delete a column in a dataframe
@@ -116,14 +123,14 @@ void display_name(COLUMN** dataframe);
  * @brief: Display the number of rows in the dataframe
  * @param: Dataframe in which we want the number of rows
  */
-unsigned int display_nbrow(COLUMN** dataframe);
+unsigned int display_nbrow(COLUMN** dataframe, int* log_size_array);
 
 /**
  * @brief: Return the number of column of a dataframe
  * @param: Dataframe in which we want to know the number of column
  * @return: Number of column in the dataframe
  */
-int display_nbcol(COLUMN** dataframe);
+int display_nbcol(COLUMN** dataframe, int* log_size_array);
 
 /**
  * @brief: Return the number of occurrences of a value in a dataframe

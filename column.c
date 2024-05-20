@@ -6,12 +6,17 @@
 
 int REALLOC_SIZE = 100;
 
+/**
+ * Bastien COULON, Amandine FINAS
+ * Column.C is where all the functions to create a column are written
+ */
+
 
 // Create a column
-COLUMN* create_column(ENUM_TYPE type, char* title1){
+COLUMN* create_column(ENUM_TYPE type, char* title){
     COLUMN* col;
     col = (COLUMN*) malloc(sizeof (COLUMN));
-    strcpy(col->title,title1);
+    col->title = title;
     col->log_size = 0;
     col->phys_size = 0;
     col->column_type = type;
@@ -74,7 +79,6 @@ int insert_value(COLUMN* col,  void* value) {
                         double* valaf5 = ((double *)value);
                         *(double *) col->data[col->log_size] = *valaf5;
                         break;
-//////////////////// Change for string
                     case STRING:
                         printf("String");
                         col->data[col->log_size] = (COL_TYPE *) malloc(sizeof(char)*strlen(value));
@@ -193,7 +197,7 @@ void print_col(COLUMN* col){
         while (i < col->log_size) {
             char *string[20];
             // Call of the function convert_value
-            convert_value(col, col->index[i], &(string[20]), sizeof(string));
+            convert_value(col, col->index[i], &string[20], sizeof(string));
             i++;
             col->index[i] = i;
         }

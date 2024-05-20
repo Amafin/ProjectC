@@ -3,6 +3,13 @@
 
 ///////////////////////////////// Creation of the structure of a column /////////////////////////////////
 
+/**
+ * Bastien COULON, Amandine FINAS
+ * Column.h has to purpose defining all the functions and the structures required to create and manage a column
+ */
+
+
+
 // Column that can store different types of data
 
 
