@@ -64,14 +64,14 @@ void displaycol(COLUMN** dataframe, int start, int end, int* log_size_array);   
  * @brief: Add a row in a data frame
  * @param1: dataframe in which we want to add a row
  */
-void addrow(COLUMN** dataframe);    // Add a row of values to the CDataframe
+void addrow(COLUMN** dataframe, int* log_size_array);    // Add a row of values to the CDataframe
 
 /**
  * @brief: Delete a row in a dataframe
  * @param1: Dataframe in which we delete the row
  * @param2: Index of the row we want to delete
  */
-void delrow(COLUMN** dataframe, int RowToDel);    // Delete a row of values from the CDataframe
+void delrow(COLUMN** dataframe, int RowToDel, int* log_size_array);    // Delete a row of values from the CDataframe
 
 /**
  * @brief: Add a column in a dataframe
@@ -98,7 +98,7 @@ void renamecol(COLUMN** dataframe, int ColToRename);   // Rename the title of a 
  * @param1: Dataframe in which we search the value
  * @param2: Value we look for
  */
-void checkvalue(COLUMN** dataframe, void* value);    // Check the existence of a value (search) in the CDataframe
+void checkvalue(COLUMN** dataframe, void* value, int* log_size_array);    // Check the existence of a value (search) in the CDataframe
 
 /**
  * @brief: Access a value and replace it (if wanted)
@@ -113,7 +113,7 @@ void accessvalue(COLUMN* dataframe, int rownb, int colnb, void* ReplaceValue);  
  * @brief: Display the title of each column
  * @param: Dataframe from which we display the name of the column
  */
-void display_name(COLUMN** dataframe);
+void display_name(COLUMN** dataframe, int* log_size_array);
 
 
 ///////////////////////////////// Analysis and statistics of the data frame /////////////////////////////////
@@ -137,7 +137,7 @@ int display_nbcol(COLUMN** dataframe, int* log_size_array);
  * @param1: Dataframe in which we search the value
  * @param2: Value we want to know the number of occurrences
  */
-void nb_occurences(COLUMN ** dataframe, void* x);
+void nb_occurences(COLUMN ** dataframe, void* x, int* log_size_array);
 
 /**
  * @brief: Return the number of values that are greater than the value entered by the user
@@ -145,7 +145,7 @@ void nb_occurences(COLUMN ** dataframe, void* x);
  * @param: Value is the value entered by the user
  * @return: The number of values greater than the one given
  */
-int nb_sup(COLUMN ** dataframe, void* x);
+int nb_sup(COLUMN ** dataframe, void* x, int* log_size_array);
 
 /**
  * @brief: Return the number of value less than the value given by the user
@@ -153,6 +153,6 @@ int nb_sup(COLUMN ** dataframe, void* x);
  * @param2: Value we want to know how many are less
  * @return: number of values less than the one given
  */
-int nb_less(COLUMN ** dataframe, void* x);
+int nb_less(COLUMN ** dataframe, void* x, int* log_size_array);
 
 #endif

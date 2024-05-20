@@ -22,9 +22,9 @@ COLUMN** createdataframe(){
 
 // Fill in the CDataframe with user input
 void fillingdataframe(COLUMN ** dataframe, COLUMN* col, int* log_size_array){
+    *log_size_array = *log_size_array + 1;
     dataframe[*log_size_array] = (COLUMN *) malloc(sizeof(COLUMN));
     dataframe[*log_size_array] = col;
-    *log_size_array = *log_size_array + 1;
 }
 
 void hardfillingdataframe(COLUMN** dataframe, int* log_size_array){
@@ -57,14 +57,19 @@ void hardfillingdataframe(COLUMN** dataframe, int* log_size_array){
 
 // Display the whole dataframe
 void displaydataframe(COLUMN** dataframe, int* log_size_array){
-    int i;
-    char* string[20];
-    printf("Entered\n");
-    for(i = 0; i < display_nbrow(dataframe, log_size_array); i++){
+    for(int i = 0; i < display_nbrow(dataframe, log_size_array); i++){
         {
+            /*if(i == 0){
+                printf("%s", dataframe[*log_size_array]->title);
+                for(int k = 0; k < display_nbcol(dataframe, log_size_array); k++){
+                    printf("%s  ", dataframe[k]->title);
+                }
+                printf("\n");
+            }*/
             for(int j = 0; j < display_nbcol(dataframe, log_size_array); j++){
-                convert_value(dataframe[j], dataframe[j]->index[j], &string[20], sizeof(string));
-                printf("%s     ", string[j]);
+                char* string[20];
+                convert_value(dataframe[j], dataframe[j]->index[i], &string[20], sizeof(string));
+                printf("%s     ", (char *)dataframe[j]->data[i]);
             }
             printf("\n");
         }
@@ -74,9 +79,9 @@ void displaydataframe(COLUMN** dataframe, int* log_size_array){
 // Display some row of the dataframe
 void displayrow(COLUMN** dataframe, int start, int end, int* log_size_array){
     int i;
-    char* string[10];
     for(i = start-1; i < end; i++){
         for(int j = 0; j < display_nbcol(dataframe, log_size_array); j++){
+            char* string[20];
             convert_value(dataframe[j], i, string, sizeof(string));
             printf("%s      ", *string);
         }
@@ -86,15 +91,14 @@ void displayrow(COLUMN** dataframe, int start, int end, int* log_size_array){
 
 // Display some column of the dataframe
 void displaycol(COLUMN** dataframe, int start, int end, int* log_size_array){
-    char* string[10];
-    printf("Entrée fonction");
     for(int i = 0; i < display_nbrow(dataframe, log_size_array); i++){
-        if(i == 0){
+        /*if(i == 0){
             for(int k = start-1; k < end; k++){
                 printf("%s  ", dataframe[k]->title);
             }
-        }
+        }*/
         for(int j = start; j < end; j++){
+            char* string[20];
             convert_value(dataframe[j], i, string, sizeof(string));
             printf("%s     ", *string);
         }
@@ -106,11 +110,10 @@ void displaycol(COLUMN** dataframe, int start, int end, int* log_size_array){
 ///////////////////////////////// Usual operations on the data frame /////////////////////////////////
 
 
-void addrow(COLUMN** dataframe){
-    int i = 0;
+void addrow(COLUMN** dataframe, int* log_size_array){
     void* value;
 
-    while(dataframe[i] != NULL){
+    for(int i = 0; i <= *log_size_array; i++){
         // Add your values to your new column
         switch(dataframe[i]->column_type){
             case NULLVAL:
@@ -159,11 +162,9 @@ void addrow(COLUMN** dataframe){
 }
 
 // Free space used by a row
-void delrow(COLUMN** dataframe, int RowToDel){
-    int i = 0;
-    while(dataframe[i] != NULL){
+void delrow(COLUMN** dataframe, int RowToDel, int* log_size_array){
+    for(int i = 0; i <= *log_size_array; i++){
         free((dataframe[i])->data[RowToDel]);
-        i++;
     }
 }
 
@@ -302,18 +303,19 @@ void renamecol(COLUMN** dataframe, int ColToRename){
 }
 
 // Check if a value is in the dataframe
-void checkvalue(COLUMN** dataframe, void* value){
-    int i, j, truth;
+void checkvalue(COLUMN** dataframe, void* value, int* log_size_array){
+    int i, truth;
     i = 0;
     truth = 0;
-    while(dataframe[i] != NULL && truth != 1){
-        for(j = 0; j < dataframe[i]->log_size && truth != 1; j++){
+    while(i <= *log_size_array && truth != 1){
+        for(int j = 0; j < dataframe[i]->log_size && truth != 1; j++){
             char* string[20];
             convert_value(dataframe[i], i, &string[20], sizeof(string));
             if(dataframe[i]->data[j] == value){
                 truth = 1;
             }
         }
+        i++;
     }
     if(truth == 1){
         printf("The value is in the dataframe");
@@ -329,9 +331,8 @@ void accessvalue(COLUMN* dataframe, int rownb, int colnb, void* ReplaceValue){
 }
 
 // Gives the title of all the columns
-void display_name(COLUMN** dataframe){
-    int i = 0;
-    while(dataframe[i] != NULL){
+void display_name(COLUMN** dataframe, int* log_size_array){
+    for(int i = 0; i <= *log_size_array; i++){
         printf("The title of the column %d is %s\n", i, dataframe[i]->title);
         i++;
     }
@@ -344,7 +345,7 @@ void display_name(COLUMN** dataframe){
 // Print the number of row in the dataframe
 unsigned int display_nbrow(COLUMN** dataframe, int* log_size_array){
     unsigned int max_row = 0;
-    for(int i = 0; i < *log_size_array; i++){
+    for(int i = 0; i <= *log_size_array; i++){
         if(dataframe[i]->log_size > max_row){
             max_row = dataframe[i]->log_size;
         }
@@ -355,37 +356,34 @@ unsigned int display_nbrow(COLUMN** dataframe, int* log_size_array){
 // Print the number of columns in the dataframe
 int display_nbcol(COLUMN** dataframe, int* log_size_array){
     int counter = 0;
-    for(int i = 0; i < *log_size_array; i++){
+    for(int i = 0; i <= *log_size_array; i++){
         counter++;
     }
     return counter;
 }
 
 // Print the occurrences of a value given in the whole dataframe
-void nb_occurences(COLUMN ** dataframe, void* value){
-    int compteur = 0, i = 0;
-    while(dataframe[i] != NULL) {
+void nb_occurences(COLUMN ** dataframe, void* value, int* log_size_array){
+    int compteur = 0;
+    for(int i = 0; i <= *log_size_array; i++){
         compteur += value_occ(value, dataframe[i]);
-        i++;
     }
 }
 
 // Return the number of value greater than the one given
-int nb_sup(COLUMN ** dataframe, void* value){
-    int compteur = 0, i = 0;
-    while(dataframe[i]!=NULL) {
+int nb_sup(COLUMN ** dataframe, void* value,int* log_size_array){
+    int compteur = 0;
+    for(int i = 0; i <= *log_size_array; i++){
         compteur += value_greater(dataframe[i], value);
-        i++;
     }
     return compteur;
 }
 
 // Return the number of value less than the one given
-int nb_less(COLUMN ** dataframe, void* value){
-    int compteur = 0,i = 0;
-    while(dataframe[i]!=NULL) {
+int nb_less(COLUMN ** dataframe, void* value,int* log_size_array){
+    int compteur = 0;
+    for(int i = 0; i <= *log_size_array; i++){
         compteur += value_less(dataframe[i], value);
-        i++;
     }
     return compteur;
 }

@@ -6,7 +6,7 @@ int main() {
 
 ///////////////////////////////// Variables /////////////////////////////////
 
-    int action, DoItAgain = 1, size = 0, *log_size_array = &size;
+    int action, DoItAgain = 1, size = -1, *log_size_array = &size;
     int start = 0, end = 0, delete = 0, RenameCol = 0, row = 0, column = 0;
     char string[20];
     void* value;
@@ -29,7 +29,6 @@ int main() {
                 break;
 
             case 2:
-                print_col(dataframe[0]);
                 displaydataframe(dataframe, log_size_array);
                 break;
 
@@ -50,13 +49,13 @@ int main() {
                 break;
 
             case 5:
-                addrow(dataframe);
+                addrow(dataframe, log_size_array);
                 break;
 
             case 6:
                 printf("Which row do you want to delete?\n");
                 scanf("%d", &delete);
-                delrow(dataframe, delete);
+                delrow(dataframe, delete, log_size_array);
                 break;
 
             case 7:
@@ -75,7 +74,7 @@ int main() {
             case 9:
                 printf("What value are you looking for?\n");
                 scanf("%s", string);
-                checkvalue(dataframe, string);
+                checkvalue(dataframe, string, log_size_array);
                 break;
 
             case 10:
@@ -120,7 +119,7 @@ int main() {
                 break;
 
             case 11:
-                display_name(dataframe);
+                display_name(dataframe, log_size_array);
                 break;
 
 
@@ -159,17 +158,17 @@ int main() {
                         scanf("%d", (int *) value);
                         break;
                 }
-                //nb_occurences(dataframe);
+                //nb_occurences(dataframe, log_size_array);
                 break;
 
                 //////////////////// To change
             case 13:
-                //nb_sup(dataframe);
+                //nb_sup(dataframe, log_size_array);
                 break;
 
                 //////////////////// To change
             case 14:
-                //nb_less(dataframe);
+                //nb_less(dataframe, log_size_array);
                 break;
 
             default:
