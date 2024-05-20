@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "malloc.h"
 #include <string.h>
-
+#include "cdataframe.h"
 
 int REALLOC_SIZE = 100;
 
@@ -17,7 +17,6 @@ COLUMN* create_column(ENUM_TYPE type, char* title1){
     col->column_type = type;
     col->data = NULL;
     col->index = NULL;
-
     return col;
 };
 
@@ -47,41 +46,47 @@ int insert_value(COLUMN* col,  void* value) {
                         break;
                     case UINT:
                         printf("UnInt");
-                        col->data[col->phys_size] = (unsigned int *) malloc(sizeof(unsigned int));
-                        *((unsigned int *) col->data[col->phys_size]) = *((unsigned int *) value);
+                        col->data[col->log_size] = (COL_TYPE *) malloc(sizeof(unsigned int));
+                        unsigned int* valaf1 = ((unsigned int *)value);
+                        *(unsigned int *) col->data[col->log_size] = valaf1;
                         break;
                     case INT:
- //////////////////////////////////////////////////////// Copy this part in the other
                         printf("Int\n");
                         col->data[col->log_size] = (COL_TYPE *) malloc(sizeof(int));
-                        int* valaf = ((int *)value);
-                        *(int *) col->data[col->log_size] = valaf;
+                        int* valaf2 = ((int *)value);
+                        *(int *) col->data[col->log_size] = valaf2;
                         break;
                     case CHAR:
                         printf("Char");
-                        col->data[col->phys_size] = (char *) malloc(sizeof(char));
-                        *((char *) col->data[col->phys_size]) = *((char *) value);
+                        col->data[col->log_size] = (COL_TYPE *) malloc(sizeof(char));
+                        char* valaf3 = ((char *)value);
+                        *(char *) col->data[col->log_size] = valaf3;
                         break;
                     case FLOAT:
                         printf("Float");
-                        col->data[col->phys_size] = (float *) malloc(sizeof(float));
-                        *((float *) col->data[col->phys_size]) = *((float *) value);
+                        col->data[col->log_size] = (COL_TYPE *) malloc(sizeof(float));
+                        float* valaf4 = ((float *)value);
+                        *(float *) col->data[col->log_size] = *valaf4;
                         break;
                     case DOUBLE:
                         printf("Double");
-                        col->data[col->phys_size] = (double *) malloc(sizeof(double));
-                        *((double *) col->data[col->phys_size]) = *((double *) value);
+                        col->data[col->log_size] = (COL_TYPE *) malloc(sizeof(double));
+                        double* valaf5 = ((double *)value);
+                        *(double *) col->data[col->log_size] = *valaf5;
                         break;
+//////////////////// Change for string
                     case STRING:
                         printf("String");
-                        col->data[col->phys_size] = (char *) malloc(sizeof(char));
-                        *((char *) col->data[col->phys_size]) = *((char *) value);
+                        col->data[col->log_size] = (COL_TYPE *) malloc(sizeof(char)*strlen(value));
+                        char* valaf6 = ((char *)value);
+                        *(char *) col->data[col->log_size] = valaf6;
                         break;
                     case STRUCTURE:
                         printf("Structure");
                         // TO CHANGE //
-                        col->data[col->phys_size] = (int *) malloc(sizeof(int));
-                        *((int *) col->data[col->phys_size]) = *((int *) value);
+                        col->data[col->log_size] = (COL_TYPE *) malloc(sizeof(int));
+                        int* valaf7 = ((int *)value);
+                        *(int *) col->data[col->log_size] = *valaf7;
                         break;
                     default:
                         printf("Nothing");
@@ -111,15 +116,18 @@ int insert_value(COLUMN* col,  void* value) {
 //  Delete the allocated space of each value, then the whole column
 void delete_column(COLUMN **col){
     int i;
-    for(i = 1; i < (*col)->log_size; i++ )
+    for(i = 0; i < (*col)->log_size; i++ )
     {
         free((*col)->data[i]);
+        (*col)->log_size --;
+        printf("Data deleted\n");
     }
     free((*col));
+    printf("Column deleted\n");
 }
 
 
-// Convert the values in a column to string
+// Convert a value in a column to string
 void convert_value(COLUMN *col, unsigned long long int i, char* str[], int size)
 {
     char buffer[50];
@@ -181,6 +189,7 @@ void print_col(COLUMN* col){
 
     // Conversion of the values
     if(col->data != NULL) {
+        printf("%s\n", col->title);
         while (i < col->log_size) {
             char *string[20];
             // Call of the function convert_value
@@ -191,7 +200,7 @@ void print_col(COLUMN* col){
     }
     i=0;
     while(i<col->log_size) {
-        printf("Value at position %llu: %s\n", col->index[i], col->data[col->index[i]]);
+        printf("%s\n", col->data[col->index[i]]);
         i++;
     }
 }
@@ -204,7 +213,7 @@ void print_col(COLUMN* col){
 int value_occ(void* value, COLUMN* col){
     int i, occurences = 0;
 
-    for(i= 0; i<col->log_size; i++){
+    for(i= 0; i < col->log_size; i++){
         if(col->data[i] == value){
             occurences += 1;
         }

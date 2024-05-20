@@ -12,7 +12,6 @@ int main() {
 
     char title[50];
     void* value;
-    char str[50];
     COLUMN* column1;
 
 
@@ -116,9 +115,13 @@ int main() {
             break;
     }
 
+    print_col(column1);
+
+
 ////////////////// TO CHANGE ///////////////////////////
 
-    print_col(column1);
+    // printf("There are %d value less in col\n", value_less(column1, (void *)7));
+    // printf("There are %d value more in col", value_greater(column1, (void *)5));
 
 
     return 0;

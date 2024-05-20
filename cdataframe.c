@@ -13,15 +13,13 @@ COLUMN** createdataframe(){
 }
 
 // Fill in the CDataframe with user input
-void fillingdataframe(COLUMN ** dataframe,COLUMN* col,int place){
-    if(dataframe[place] == NULL) {
-        dataframe[place] = col;
+void fillingdataframe(COLUMN ** dataframe, COLUMN* col){
+    int i = 0;
+    while(dataframe[i+1] != NULL){
+        i++;
     }
-    else{
-        printf("This place is not empty !");
-    }
+    dataframe[i+1] = col;
 }
-
 
 ///////////////////// Hard filling of the dataframe
 
@@ -33,34 +31,44 @@ void fillingdataframe(COLUMN ** dataframe,COLUMN* col,int place){
 void displaydataframe(COLUMN** dataframe){
     int i;
     char* string[10];
-    for(i = 0; i<(*dataframe[i]).log_size; i++){
+    for(i = 0; i < display_nbrow(dataframe); i++){
         {
-            convert_value(dataframe[i],i, string, sizeof(string));
-            printf("%s",string[i]);
+            for(int j = 0; j < display_nbcol(dataframe); j++){
+                convert_value(dataframe[j], j, string, sizeof(string));
+                printf("%s     ", string[j]);
+            }
+            printf("\n");
         }
     }
 }
 
 // Display some row of the dataframe
 void displayrow(COLUMN** dataframe, int start, int end){
-    int i = 0;
+    int i;
     char* string[10];
-    while(dataframe[i] != NULL){
-        for(int j = start; j<end; j++) {
-            convert_value(dataframe[i], i, string, sizeof(string));
-            printf("%s\n",string[i]);
+    for(i = start; i < end + 1; i++){
+        for(int j = 0; j < display_nbcol(dataframe); j++){
+            convert_value(dataframe[j], i, string, sizeof(string));
+            printf("%s      ", *string);
         }
-        i++;
+        printf("\n");
     }
 }
 
 // Display some column of the dataframe
 void displaycol(COLUMN** dataframe, int start, int end){
     char* string[10];
-    for(int i = start; i<end+1; i++){
-        printf("Title : %s\n",dataframe[i]->title);
-        convert_value(dataframe[i], i, string, sizeof(string));
-        printf("%s\n",string[i]);
+    for(int i = 0; i < display_nbrow(dataframe); i++){
+        if(i == 0){
+            for(int k = start; k < end + 1; k++){
+                printf("%s  ", dataframe[k]->title);
+            }
+        }
+        for(int j = start; j < end + 1; j++){
+            convert_value(dataframe[j], i, string, sizeof(string));
+            printf("%s     ", *string);
+        }
+        printf("\n");
     }
 }
 
@@ -73,7 +81,6 @@ void addrow(COLUMN** dataframe){
     void* value;
 
     while(dataframe[i] != NULL){
-        dataframe[i]->phys_size += 1;
         // Add your values to your new column
         switch(dataframe[i]->column_type){
             case NULLVAL:
@@ -81,56 +88,51 @@ void addrow(COLUMN** dataframe){
                 insert_value(dataframe[i], (void*)&value);
                 break;
             case UINT:
-                // TO CHANGE //
                 // Use the function insert_value to add the value
                 printf("Enter a value:\n");
-                scanf("%u", (unsigned int *)&value);
-                insert_value(dataframe[i], value);
+                scanf("%ud", (unsigned int *) &value);
+                insert_value(dataframe[i], (void *) value);
                 break;
             case INT:
-                printf("hello world");
                 printf("Enter a value:\n");
-                scanf("%d", (int *)&value);
-                printf("hello");
-                insert_value(dataframe[i], (void *)value);
-                printf("bye");
+                scanf("%d", (int *) &value);
+                insert_value(dataframe[i], (void *) value);
                 break;
             case CHAR:
                 printf("Enter a value:\n");
-                scanf("%c", (char *)&value);
-                insert_value(dataframe[i], value);
+                scanf("%c", (char *) &value);
+                insert_value(dataframe[i], (void *) value);
                 break;
             case FLOAT:
                 printf("Enter a value:\n");
-                scanf("%f", (float *)&value);
-                insert_value(dataframe[i], value);
+                scanf("%f", (float *) &value);
+                insert_value(dataframe[i], (void *) value);
                 break;
             case DOUBLE:
-                for(int i=0; dataframe[i]->log_size<dataframe[i]->phys_size; i++){
-                    printf("Enter a value:\n");
-                    scanf("%lf", (double *)&value);
-                    insert_value(dataframe[i], value);
-                }
+                printf("Enter a value:\n");
+                scanf("%lf", (double *) &value);
+                insert_value(dataframe[i], (void *) value);
                 break;
             case STRING:
                 printf("Enter a value:\n");
-                scanf("%c", (char *)&value);
-                insert_value(dataframe[i], value);
+                scanf("%s", (char *) &value);
+                insert_value(dataframe[i], (void *) value);
                 break;
             case STRUCTURE:
-                // TO CHANGE //
-
-                // type = STRUCTURE;
+                printf("Enter a value:\n");
+                scanf("%d", (int *) &value);
+                insert_value(dataframe[i], (void *) value);
                 break;
         }
+        i ++;
     }
 }
 
-// Free space used by the column and the column
-void delrow(COLUMN** dataframe, int ColToDel){
+// Free space used by a row
+void delrow(COLUMN** dataframe, int RowToDel){
     int i = 0;
     while(dataframe[i] != NULL){
-        free((dataframe[i])->data[ColToDel]);
+        free((dataframe[i])->data[RowToDel]);
         i++;
     }
 }
@@ -138,7 +140,7 @@ void delrow(COLUMN** dataframe, int ColToDel){
 // Add a column in the dataframe
 void addcol(COLUMN** dataframe){
     COLUMN* col;
-    int tmp, place;
+    int tmp;
     ENUM_TYPE type;
     char title[20];
     void* value;
@@ -180,71 +182,80 @@ void addcol(COLUMN** dataframe){
     scanf("%s", title);
 
     col = create_column(type, title);
+    int entervalue = 1;
 
     switch(col->column_type){
         case NULLVAL:
-            for(int i=0; col->log_size<col->phys_size; i++){
-                col = NULL;
+            for(int i = 0; i < col->phys_size; i++) {
+                value = NULL;
                 insert_value(col, (void*)&value);
             }
             break;
         case UINT:
-            // TO CHANGE //
-            // Use the function insert_value to add the value
-            for(int i=0; col->log_size<col->phys_size; i++){
+            while(entervalue == 1) {
                 printf("Enter a value:\n");
-                scanf("%u", (unsigned int *)&value);
-                insert_value(col, value);
+                scanf("%ud", (unsigned int *) &value);
+                insert_value(col, (void *) value);
+                printf("Do you want to enter another value (1=Yes, 0=No)\n");
+                scanf("%d", &entervalue);
             }
             break;
         case INT:
-            for(int i=0; col->log_size<col->phys_size; i++){
-                printf("hello world");
+            while(entervalue == 1) {
                 printf("Enter a value:\n");
-                scanf("%d", (int *)&value);
-                printf("hello");
-                insert_value(col, (void *)value);
-                printf("bye");
+                scanf("%d", (int *) &value);
+                insert_value(col, (void *) value);
+                printf("Do you want to enter another value (1=Yes, 0=No)\n");
+                scanf("%d", &entervalue);
             }
             break;
         case CHAR:
-            for(int i=0; col->log_size<col->phys_size; i++){
+            while(entervalue == 1) {
                 printf("Enter a value:\n");
-                scanf("%c", (char *)&value);
-                insert_value(col, value);
+                scanf("%c", (char *) &value);
+                insert_value(col, (void *) value);
+                printf("Do you want to enter another value (1=Yes, 0=No)\n");
+                scanf("%d", &entervalue);
             }
             break;
         case FLOAT:
-            for(int i=0; col->log_size<col->phys_size; i++){
+            while(entervalue == 1) {
                 printf("Enter a value:\n");
-                scanf("%f", (float *)&value);
-                insert_value(col, value);
+                scanf("%f", (float *) &value);
+                insert_value(col, (void *) value);
+                printf("Do you want to enter another value (1=Yes, 0=No)\n");
+                scanf("%d", &entervalue);
             }
             break;
         case DOUBLE:
-            for(int i=0; col->log_size<col->phys_size; i++){
+            while(entervalue == 1) {
                 printf("Enter a value:\n");
-                scanf("%lf", (double *)&value);
-                insert_value(col, value);
+                scanf("%lf", (double *) &value);
+                insert_value(col, (void *) value);
+                printf("Do you want to enter another value (1=Yes, 0=No)\n");
+                scanf("%d", &entervalue);
             }
             break;
         case STRING:
-            for(int i=0; col->log_size<col->phys_size; i++){
+            while(entervalue == 1) {
                 printf("Enter a value:\n");
-                scanf("%c", (char *)&value);
-                insert_value(col, value);
+                scanf("%s", (char *) &value);
+                insert_value(col, (void *) value);
+                printf("Do you want to enter another value (1=Yes, 0=No)\n");
+                scanf("%d", &entervalue);
             }
             break;
         case STRUCTURE:
-            // TO CHANGE //
-
-            // type = STRUCTURE;
+            while(entervalue == 1) {
+                printf("Enter a value:\n");
+                scanf("%d", (int *) &value);
+                insert_value(col, (void *) value);
+                printf("Do you want to enter another value (1=Yes, 0=No)\n");
+                scanf("%d", &entervalue);
+            }
             break;
     }
-
-    printf("At which place do you want to add your column ?");
-    scanf("%d",&place);
-    fillingdataframe(dataframe, col, place);
+    fillingdataframe(dataframe, col);
 }
 
 // Free space used by the column and the column
@@ -256,17 +267,17 @@ void delcol(COLUMN** dataframe, int ColToDel){
 void renamecol(COLUMN** dataframe, int ColToRename){
     char NewName[20];
     printf("Enter a new name for your column");
-    scanf("%s",NewName);
+    scanf("%s", NewName);
     dataframe[ColToRename]->title = NewName;
 }
 
 // Check if a value is in the dataframe
 void checkvalue(COLUMN** dataframe, void* value){
-    int i,j,truth;
+    int i, j, truth;
     i = 0;
     truth = 0;
-    while(dataframe[i] != NULL && truth!=1){
-        for(j=0; j<dataframe[i]->log_size && truth!=1; j++){
+    while(dataframe[i] != NULL && truth != 1){
+        for(j = 0; j < dataframe[i]->log_size && truth != 1; j++){
             if(dataframe[i]->data[j] == value){
                 truth = 1;
             }
@@ -280,16 +291,16 @@ void checkvalue(COLUMN** dataframe, void* value){
     }
 }
 
-
-///////////////////////////////////////// Access value
-void* accessvalue(int dataframe, int rownb, int colnb, void* ReplaceValue){
-    return 0;
+// Access a value and replace it with a new value given by the user
+void accessvalue(COLUMN* dataframe, int rownb, int colnb, void* ReplaceValue){
+    dataframe[colnb].data[rownb] = ReplaceValue;
 }
 
+// Gives the title of all the columns
 void display_name(COLUMN** dataframe){
     int i = 0;
     while(dataframe[i] != NULL){
-        printf("The title of the column %d is %s",i,dataframe[i]->title);
+        printf("The title of the column %d is %s\n", i, dataframe[i]->title);
         i++;
     }
 }
@@ -298,15 +309,27 @@ void display_name(COLUMN** dataframe){
 ///////////////////////////////// Analysis and statistics of the data frame /////////////////////////////////
 
 
-/////////////////////////////////////// display_nbrow(COLUMN** dataframe)
+// Print the number of row in the dataframe
+unsigned int display_nbrow(COLUMN** dataframe){
+    unsigned int max_row = 0;
+    int i = 0;
+    while(dataframe[i] != NULL){
+        if(dataframe[i]->log_size > max_row){
+            max_row = dataframe[i]->log_size;
+        }
+    }
+    printf("There are %ud rows at the maximum", max_row);
+    return max_row;
+}
 
 // Print the number of columns in the dataframe
-void display_nbcol(COLUMN** dataframe){
+int display_nbcol(COLUMN** dataframe){
     int i = 0;
     while (dataframe[i] != NULL){
         i++;
     }
-    printf("The dataframe contains %d columns",i);
+    printf("The dataframe contains %d columns", i);
+    return i;
 }
 
 // Print the occurrences of a value given in the whole dataframe
