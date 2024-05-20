@@ -12,7 +12,16 @@ A function to free the column after freeing all the spaces used for this column
 A function to display a value in the column
 A function to display the whole column
 
+
 Currently :
+
+All the main functions of the column.c are working, but are accessed in the function of the dataframe.c
+
+In dataframe.c, most of the main function are working, and are accessible when you launch the project
+
+
+When you display the dataframe, or a part of it, you have to launch again the project to be able to display again the dataframe (every launch, you cannot display the dataframe more than one time)
+
 
  A Program to : 
 implement
