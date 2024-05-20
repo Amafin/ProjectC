@@ -11,11 +11,6 @@ A function to add a value to the column if there is enough space in the column t
 A function to free the column after freeing all the spaces used for this column
 A function to display a value in the column
 A function to display the whole column
-This part is nearly finished, we just have to make so adjustments.
-
-We also tried to think about the next steps, to have the real CDataFrame.
-So we made a header with how we see the future functions and their parameters but they are subject to change since we are still working on it and 
-maybe our views are not as good as we think
 
 Currently :
 
