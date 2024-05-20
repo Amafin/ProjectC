@@ -115,7 +115,7 @@ int main() {
                         scanf("%d", (int *) value);
                         break;
                 }
-                accessvalue(*dataframe, row, column, value);
+                accessvalue(*dataframe, row, column, (void*)value);
                 break;
 
             case 11:

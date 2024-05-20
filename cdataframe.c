@@ -25,6 +25,7 @@ void fillingdataframe(COLUMN ** dataframe, COLUMN* col, int* log_size_array){
     *log_size_array = *log_size_array + 1;
     dataframe[*log_size_array] = (COLUMN *) malloc(sizeof(COLUMN));
     dataframe[*log_size_array] = col;
+    printf("%s", dataframe[*log_size_array]->title);
 }
 
 void hardfillingdataframe(COLUMN** dataframe, int* log_size_array){
@@ -97,7 +98,7 @@ void displaycol(COLUMN** dataframe, int start, int end, int* log_size_array){
                 printf("%s  ", dataframe[k]->title);
             }
         }*/
-        for(int j = start; j < end; j++){
+        for(int j = start-1; j < end; j++){
             char* string[20];
             convert_value(dataframe[j], i, string, sizeof(string));
             printf("%s     ", *string);
@@ -157,14 +158,17 @@ void addrow(COLUMN** dataframe, int* log_size_array){
                 insert_value(dataframe[i], (void *) value);
                 break;
         }
-        i ++;
     }
 }
 
 // Free space used by a row
 void delrow(COLUMN** dataframe, int RowToDel, int* log_size_array){
     for(int i = 0; i <= *log_size_array; i++){
-        free((dataframe[i])->data[RowToDel]);
+        free(dataframe[i]->data[RowToDel-1]);
+        for(int j = RowToDel-1; j < dataframe[i]->log_size-1; j++){
+            dataframe[i]->data[j] = dataframe[i]->data[j+1];
+        }
+        dataframe[i]->log_size --;
     }
 }
 
@@ -332,9 +336,8 @@ void accessvalue(COLUMN* dataframe, int rownb, int colnb, void* ReplaceValue){
 
 // Gives the title of all the columns
 void display_name(COLUMN** dataframe, int* log_size_array){
-    for(int i = 0; i <= *log_size_array; i++){
-        printf("The title of the column %d is %s\n", i, dataframe[i]->title);
-        i++;
+    for(int i = 0; i <2; i++){
+        printf("The title of the column %d is %s\n", i+1, dataframe[*log_size_array]->title);
     }
 }
 
